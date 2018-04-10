@@ -14,9 +14,9 @@ Proyecto plantilla para los trabajos prácticos de la asignatura electiva [Técn
 * [TGC.Core](https://www.nuget.org/packages/TGC.Core/) (se baja automáticamente al hacer build por primera vez)
 
 ## Integrantes ##
-TGC, Tgcito  |  Apellido, Nombre
------------- | -------------
-<img src="https://github.com/tgc-utn/tgc-utn.github.io/blob/master/images/robotgc.png" height="500"> | <img src="https://github.com/tgc-utn/tgc-utn.github.io/blob/master/images/trofeotp.png" height="500">
+Afi Guzmán   |  Nico Martínez
+------------ | --------------
+<img src="https://media.eldestapeweb.com/adjuntos/177/imagenes/000/309/0000309357.jpg" height="500"> | <img src="https://www.filo.news/__export/1522550075990/sites/claro/img/2018/03/31/natacha_jaitt.jpg_525981578.jpg" height="500">
 
 ## ScreenShot ##
 ![screenshot1](https://github.com/tgc-utn/tgc-group/blob/master/TGC.Group/Media/cajaMadera4.jpg)
