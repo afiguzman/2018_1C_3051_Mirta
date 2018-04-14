@@ -33,6 +33,7 @@
             // 
             // panel3D
             // 
+            this.panel3D.BackColor = System.Drawing.SystemColors.MenuHighlight;
             this.panel3D.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3D.Location = new System.Drawing.Point(0, 0);
             this.panel3D.Name = "panel3D";

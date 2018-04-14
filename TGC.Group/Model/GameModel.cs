@@ -36,6 +36,9 @@ namespace TGC.Group.Model
         //Mesh de TgcLogo.
         private TgcMesh Mesh { get; set; }
 
+        private TgcPlane floor { get; set; }
+
+
         //Boleano para ver si dibujamos el boundingbox
         private bool BoundingBox { get; set; }
 
@@ -49,6 +52,18 @@ namespace TGC.Group.Model
         {
             //Device de DirectX para crear primitivas.
             var d3dDevice = D3DDevice.Instance.Device;
+
+            int mapLength = 1000;
+            //las cantidades base se pensaron para un escenario de 2000, por lo que divido la longitud actual por eso y multiplico los valores base
+            int multiplier = mapLength / 1000;
+            //las cantidades base se pensaron para un escenario de 2000, por lo que divido la longitud actual por eso y multiplico los valores base
+            
+
+
+            //armo el piso con un plano
+            var floorTexture = TgcTexture.createTexture(d3dDevice, MediaDir + "d_race_map.jpg");
+            floor = new TgcPlane(new TGCVector3(-(mapLength / 2), 0, -(mapLength / 2)), new TGCVector3(mapLength, 0, mapLength), TgcPlane.Orientations.XZplane, floorTexture,1,1);
+
 
             //Textura de la carperta Media. Game.Default es un archivo de configuracion (Game.settings) util para poner cosas.
             //Pueden abrir el Game.settings que se ubica dentro de nuestro proyecto para configurar.
@@ -75,7 +90,7 @@ namespace TGC.Group.Model
             //Lo que en realidad necesitamos gráficamente es una matriz de View.
             //El framework maneja una cámara estática, pero debe ser inicializada.
             //Posición de la camara.
-            var cameraPosition = new TGCVector3(0, 0, 125);
+            var cameraPosition = new TGCVector3(0, 20, 125);
             //Quiero que la camara mire hacia el origen (0,0,0).
             var lookAt = TGCVector3.Empty;
             //Configuro donde esta la posicion de la camara y hacia donde mira.
@@ -137,6 +152,9 @@ namespace TGC.Group.Model
             //A modo ejemplo realizamos toda las multiplicaciones, pero aquí solo nos hacia falta la traslación.
             //Finalmente invocamos al render de la caja
             Box.Render();
+
+            
+            floor.Render();
 
             //Cuando tenemos modelos mesh podemos utilizar un método que hace la matriz de transformación estándar.
             //Es útil cuando tenemos transformaciones simples, pero OJO cuando tenemos transformaciones jerárquicas o complicadas.
