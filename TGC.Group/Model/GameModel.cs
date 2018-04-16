@@ -23,7 +23,7 @@ namespace TGC.Group.Model
 
         private const float MOVEMENT_SPEED = 200f;
         private TgcThirdPersonCamera camaraInterna;
-        private TgcMesh mainMesh;
+        private Car car;
         /// <summary>
         ///     Constructor del juego.
         /// </summary>
@@ -65,7 +65,6 @@ namespace TGC.Group.Model
             //las cantidades base se pensaron para un escenario de 2000, por lo que divido la longitud actual por eso y multiplico los valores base
             
 
-
             //armo el piso con un plano
             var floorTexture = TgcTexture.createTexture(d3dDevice, MediaDir + "d_race_map.jpg");
             floor = new TgcPlane(new TGCVector3(-(mapLength / 2), 0, -(mapLength / 2)), new TGCVector3(mapLength, 0, mapLength), TgcPlane.Orientations.XZplane, floorTexture,1,1);
@@ -87,18 +86,16 @@ namespace TGC.Group.Model
             //Entonces actualizamos la posición lógica, luego podemos utilizar esto en render para posicionar donde corresponda con transformaciones.
             Box.Position = new TGCVector3(-25, 0, 0);
 
-            //Cargo el unico mesh que tiene la escena.
-            mainMesh = new TgcSceneLoader().loadSceneFromFile(MediaDir + "\\Vehiculos\\CamionCemento\\CamionCemento-TgcScene.xml").Meshes[0];
-            //Defino una escala en el modelo logico del mesh que es muy grande.
-            mainMesh.Scale = new TGCVector3(0.5f, 0.5f, 0.5f);
-            //mainMesh.RotateY(150f);
+
+            car = new Car();
+            car.InitializeCar(MediaDir);
 
             //Suelen utilizarse objetos que manejan el comportamiento de la camara.
             //Lo que en realidad necesitamos gráficamente es una matriz de View.
             //El framework maneja una cámara estática, pero debe ser inicializada.
           
             //Configuro donde esta la posicion de la camara y hacia donde mira.
-            camaraInterna = new TgcThirdPersonCamera(mainMesh.Position, 200, 300);
+            camaraInterna = new TgcThirdPersonCamera(car.getCarPosition(), 200, 300);
             Camara = camaraInterna;
             //Internamente el framework construye la matriz de view con estos dos vectores.
             //Luego en nuestro juego tendremos que crear una cámara que cambie la matriz de view con variables como movimientos o animaciones de escenas.
@@ -114,19 +111,21 @@ namespace TGC.Group.Model
             PreUpdate();
 
            
-             if (Input.keyDown(Key.W))
-
+            if (Input.keyDown(Key.W))
             {
-                mainMesh.Move(0, 0, -1);  
-
+                car.Speed = car.Speed + 1;
             }
 
             if (Input.keyDown(Key.S))
-
             {
-                mainMesh.Move(0, 0, 1);
-
+                car.Speed = car.Speed - 1;
             }
+
+            if (Input.keyDown(Key.A))
+            {
+            }
+
+            car.Move(ElapsedTime);
 
             //Capturar Input teclado
             if (Input.keyPressed(Key.F))
@@ -134,7 +133,7 @@ namespace TGC.Group.Model
                 BoundingBox = !BoundingBox;
             }
 
-            camaraInterna.Target = mainMesh.Position;
+            camaraInterna.Target = car.getCarPosition();
 
 
             PostUpdate();
@@ -166,15 +165,15 @@ namespace TGC.Group.Model
 
             //Cuando tenemos modelos mesh podemos utilizar un método que hace la matriz de transformación estándar.
             //Es útil cuando tenemos transformaciones simples, pero OJO cuando tenemos transformaciones jerárquicas o complicadas.
-            mainMesh.UpdateMeshTransform();
+            car.Mesh.UpdateMeshTransform();
             //Render del mesh
-            mainMesh.Render();
+            car.Mesh.Render();
 
             //Render de BoundingBox, muy útil para debug de colisiones.
             if (BoundingBox)
             {
                 Box.BoundingBox.Render();
-                mainMesh.BoundingBox.Render();
+                car.Mesh.BoundingBox.Render();
             }
 
             //Finaliza el render y presenta en pantalla, al igual que el preRender se debe para casos puntuales es mejor utilizar a mano las operaciones de EndScene y PresentScene
@@ -191,7 +190,7 @@ namespace TGC.Group.Model
             //Dispose de la caja.
             Box.Dispose();
             //Dispose del mesh.
-            mainMesh.Dispose();
+            car.Mesh.Dispose();
         }
     }
 }
