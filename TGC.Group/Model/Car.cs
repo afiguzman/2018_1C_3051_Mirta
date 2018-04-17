@@ -17,11 +17,47 @@ namespace TGC.Group.Model
         private TgcMesh mesh;
         private TGCVector3 direction;
 
-        public float Speed { get => speed; set => speed = value; }
-        public float Acceleration { get => acceleration; set => acceleration = value; }
-        public TgcMesh Mesh { get => mesh; set => mesh = value; }
-       
+       // public float Speed { get => speed; set => speed = value; }
+       // public float Acceleration { get => acceleration; set => acceleration = value; }
+       // public TgcMesh Mesh { get => mesh; set => mesh = value; }
+public float Acceleration
+        {
+            get
+            {
+                return acceleration;
+            }
 
+            set
+            {
+                acceleration = value;
+            }
+        }
+
+        public float Speed
+        {
+            get
+            {
+                return speed;
+            }
+
+            set
+            {
+                speed = value;
+            }
+        }
+
+        public TgcMesh Mesh
+        {
+            get
+            {
+                return mesh;
+            }
+
+            set
+            {
+                mesh = value;
+            }
+        }
 
         public void InitializeCar(String MediaDir)
         {

@@ -1,4 +1,5 @@
 using Microsoft.DirectX.DirectInput;
+using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
@@ -41,8 +42,11 @@ namespace TGC.Group.Model
 
         //Mesh de TgcLogo.
         private TgcMesh Mesh { get; set; }
-
         private TgcPlane floor { get; set; }
+        private List<TgcMesh> camas;
+        private TgcMesh Cama { get; set; }
+        
+       
 
 
         //Boleano para ver si dibujamos el boundingbox
@@ -59,20 +63,48 @@ namespace TGC.Group.Model
             //Device de DirectX para crear primitivas.
             var d3dDevice = D3DDevice.Instance.Device;
 
-            int mapLength = 1000;
+            int mapLength = 2000;
             //las cantidades base se pensaron para un escenario de 2000, por lo que divido la longitud actual por eso y multiplico los valores base
             int multiplier = mapLength / 1000;
             //las cantidades base se pensaron para un escenario de 2000, por lo que divido la longitud actual por eso y multiplico los valores base
             
 
             //armo el piso con un plano
-            var floorTexture = TgcTexture.createTexture(d3dDevice, MediaDir + "d_race_map.jpg");
-            floor = new TgcPlane(new TGCVector3(-(mapLength / 2), 0, -(mapLength / 2)), new TGCVector3(mapLength, 0, mapLength), TgcPlane.Orientations.XZplane, floorTexture,1,1);
+            var floorTexture = TgcTexture.createTexture(d3dDevice, MediaDir + "//Textures//Wood1.jpg");
+            floor = new TgcPlane(new TGCVector3(-(mapLength / 1), 0, -(mapLength / 1)), new TGCVector3(mapLength, 0, mapLength), TgcPlane.Orientations.XZplane, floorTexture,2,2);
+            
 
 
-            //Textura de la carperta Media. Game.Default es un archivo de configuracion (Game.settings) util para poner cosas.
-            //Pueden abrir el Game.settings que se ubica dentro de nuestro proyecto para configurar.
-            var pathTexturaCaja = MediaDir + Game.Default.TexturaCaja;
+        Cama = new TgcSceneLoader().loadSceneFromFile(MediaDir + "\\Muebles\\CamaMarinera\\CamaMarinera-TgcScene.xml").Meshes[0];
+                Cama.Scale = new TGCVector3(4f, 4f, 4f);
+                Cama.Position = new TGCVector3(-500, 0, -550);
+
+            //INSTANCIAS
+
+            var rows = 3;
+            var cols = 3;
+            float offset = -650;
+            camas = new List<TgcMesh>();
+            for (var i = 0; i < rows; i++)
+            {
+                for (var j = 0; j < cols; j++)
+                {
+                    //Crear instancia de modelo
+                    var instance = Cama.createMeshInstance(Cama.Name + i + "_" + j);
+                    //No recomendamos utilizar AutoTransform, en juegos complejos se pierde el control. mejor utilizar Transformaciones con matrices.
+                    instance.AutoTransform = true;
+                    //Desplazarlo
+                    instance.Position = new TGCVector3(-500, 0, -550);
+                    instance.Move(i * offset, 0, j * offset);
+                    instance.Scale = new TGCVector3(4f, 4f, 4f);
+
+                    camas.Add(instance);
+                }
+            }
+
+                    //Textura de la carperta Media. Game.Default es un archivo de configuracion (Game.settings) util para poner cosas.
+                    //Pueden abrir el Game.settings que se ubica dentro de nuestro proyecto para configurar.
+                    var pathTexturaCaja = MediaDir + Game.Default.TexturaCaja;
 
             //Cargamos una textura, tener en cuenta que cargar una textura significa crear una copia en memoria.
             //Es importante cargar texturas en Init, si se hace en el render loop podemos tener grandes problemas si instanciamos muchas.
@@ -168,10 +200,14 @@ namespace TGC.Group.Model
             Box.Transform = TGCMatrix.Scaling(Box.Scale) * TGCMatrix.RotationYawPitchRoll(Box.Rotation.Y, Box.Rotation.X, Box.Rotation.Z) * TGCMatrix.Translation(Box.Position);
             //A modo ejemplo realizamos toda las multiplicaciones, pero aquí solo nos hacia falta la traslación.
             //Finalmente invocamos al render de la caja
-            Box.Render();
-
-            
+            Box.Render();            
             floor.Render();
+
+            foreach (var mesh in camas)
+            {
+                mesh.Render();
+            }
+            Cama.Render();
 
             //Cuando tenemos modelos mesh podemos utilizar un método que hace la matriz de transformación estándar.
             //Es útil cuando tenemos transformaciones simples, pero OJO cuando tenemos transformaciones jerárquicas o complicadas.
