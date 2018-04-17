@@ -110,20 +110,30 @@ namespace TGC.Group.Model
         {
             PreUpdate();
 
-           
+            //Adelante
             if (Input.keyDown(Key.W))
             {
                 car.Speed = car.Speed + 1;
             }
 
+            //Atras
             if (Input.keyDown(Key.S))
             {
                 car.Speed = car.Speed - 1;
             }
 
+            //Derecha
+            if (Input.keyDown(Key.D))
+            {
+                car.rotateDirection("RIGHT", ElapsedTime);
+            }
+
+            //Izquierda
             if (Input.keyDown(Key.A))
             {
+                car.rotateDirection("LEFT", ElapsedTime);
             }
+           
 
             car.Move(ElapsedTime);
 
